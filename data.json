@@ -1,5 +1,16 @@
 {
-  "gallery": [
+  "userProfile": {
+    "name": "Nasma",
+    "bio": "Créatrice de contenu passionnée par le voyage, le lifestyle et le partage d'ondes positives ✨. Bienvenue dans mon univers !",
+    "avatar": "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1961&auto=format&fit=crop",
+    "social": {
+      "instagram": "https://instagram.com",
+      "tiktok": "https://tiktok.com",
+      "youtube": "https://youtube.com",
+      "snapchat": "https://snapchat.com"
+    }
+  },
+  "projects": [
     {
       "id": 1,
       "type": "image",
@@ -9,13 +20,20 @@
     },
     {
       "id": 2,
+      "type": "video",
+      "youtubeId": "jfKfPfyJRdk",
+      "title": "Mon dernier Vlog",
+      "category": "vlog"
+    },
+    {
+      "id": 3,
       "type": "image",
       "url": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070",
       "title": "Code sur un laptop",
       "category": "lifestyle"
     },
     {
-      "id": 3,
+      "id": 4,
       "type": "image",
       "url": "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?q=80&w=2070",
       "title": "Maison au bord du lac",
@@ -25,23 +43,13 @@
   "blog": [
     {
       "title": "Première pensée",
-      "date": "07 août 2025",
+      "date": "08 août 2025",
       "content": "Aujourd'hui, je me lance dans la création de mon propre espace web ! C'est un projet super excitant qui me permet d'apprendre plein de choses. Le but est d'avoir un endroit à moi, simple et joli."
     },
     {
       "title": "Inspiration du jour",
-      "date": "06 août 2025",
+      "date": "07 août 2025",
       "content": "Ne jamais sous-estimer la puissance d'une bonne playlist pour se motiver. La musique a ce pouvoir de transformer une journée ordinaire en une aventure."
-    }
-  ],
-  "playlist": [
-    {
-      "title": "Lofi Hip Hop Radio",
-      "youtubeId": "jfKfPfyJRdk"
-    },
-    {
-      "title": "Musique d'ambiance pour se concentrer",
-      "youtubeId": "5qap5aO4i9A"
     }
   ]
 }

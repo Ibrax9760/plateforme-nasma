@@ -4,80 +4,149 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon Espace Perso</title>
-
     <link rel="stylesheet" href="style.css">
-
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
+
+    <div id="preview-banner">
+        <span>Mode Aperçu Visiteur</span>
+        <button id="exit-preview-btn">Quitter l'aperçu</button>
+    </div>
+
     <nav class="sidebar">
         <div class="sidebar-header">
             <h3>Mon Univers</h3>
         </div>
         <ul class="nav-links">
-            <li><a href="#accueil"><i class='bx bxs-home'></i> Accueil</a></li>
-            <li><a href="#galerie"><i class='bx bxs-camera'></i> Galerie</a></li>
-            <li><a href="#blog"><i class='bx bxs-pencil'></i> Journal</a></li>
-            <li><a href="#playlist"><i class='bx bxs-videos'></i> Playlist</a></li>
+            <li><a href="#accueil"><i class='bx bxs-user-circle'></i> Profil</a></li>
+            <li><a href="#projets"><i class='bx bxs-camera-movie'></i> Mes Projets</a></li>
+            <li><a href="#journal"><i class='bx bxs-pencil'></i> Journal</a></li>
+            <li><a href="#contact"><i class='bx bxs-paper-plane'></i> Contact</a></li>
         </ul>
-
-        <div class="social-links">
-    <a href="https-lien-vers-ton-instagram" target="_blank"><i class='bx bxl-instagram-alt'></i></a>
-    <a href="https-lien-vers-ton-tiktok" target="_blank"><i class='bx bxl-tiktok'></i></a>
-    <a href="https-lien-vers-ton-youtube" target="_blank"><i class='bx bxl-youtube'></i></a>
-    <a href="https-lien-vers-ton-snapchat" target="_blank"><i class='bx bxl-snapchat'></i></a>
-</div>
+        <div class="social-links"></div>
     </nav>
 
     <main class="main-content">
         
         <section id="accueil" class="page-section">
-            <div class="accueil-header">
-                <img src="assets/profile.jpg" alt="Photo de profil" class="profile-pic animate-on-scroll">
-                <h1 class="animate-on-scroll">Salut, Nasma !</h1>
-                <p class="animate-on-scroll">Bienvenue dans ton espace créatif.</p>
+            <div class="profile-header">
+                <img src="" alt="Photo de profil" class="profile-pic animate-on-scroll" id="profile-avatar">
+                <h1 class="animate-on-scroll" id="profile-name"></h1>
+                <p class="animate-on-scroll" id="profile-bio"></p>
+                <button id="edit-profile-btn" class="cta-button animate-on-scroll">Modifier le profil</button>
             </div>
-            </section>
+        </section>
 
-        <section id="galerie" class="page-section">
-            <h2 class="animate-on-scroll">Galerie</h2>
+        <section id="projets" class="page-section">
+            <div class="section-header">
+                <h2 class="animate-on-scroll">Mes Projets</h2>
+                <button id="add-project-btn" class="cta-button animate-on-scroll"><i class='bx bx-plus'></i> Ajouter un projet</button>
+            </div>
             <div class="filter-buttons animate-on-scroll">
                 <button class="filter-btn active" data-category="all">Tout</button>
                 <button class="filter-btn" data-category="voyage">Voyage</button>
                 <button class="filter-btn" data-category="lifestyle">Lifestyle</button>
+                <button class="filter-btn" data-category="vlog">Vlogs</button>
             </div>
-            <div class="gallery-grid">
-                </div>
+            <div class="gallery-grid"></div>
         </section>
 
-        <section id="blog" class="page-section">
+        <section id="journal" class="page-section">
             <h2 class="animate-on-scroll">Mon Journal</h2>
-            <div class="blog-posts">
-                </div>
+            <div class="journal-form animate-on-scroll">
+                <h3>Une nouvelle pensée ?</h3>
+                <input type="text" id="new-post-title" placeholder="Titre de votre pensée">
+                <textarea id="new-post-content" placeholder="Écrivez ici..."></textarea>
+                <button id="add-post-btn" class="cta-button">Publier</button>
+            </div>
+            <div class="blog-posts"></div>
         </section>
 
-        <section id="playlist" class="page-section">
-            <h2 class="animate-on-scroll">Playlist du moment</h2>
-            <div class="playlist-container">
-                 </div>
+        <section id="contact" class="page-section">
+            <h2 class="animate-on-scroll">Envoyez-moi un message</h2>
+            <form id="contact-form" class="animate-on-scroll">
+                <textarea name="message" placeholder="Votre message ici..."></textarea>
+                <button type="submit" class="cta-button">Envoyer</button>
+            </form>
         </section>
         
     </main>
 
-    <div class="settings-panel">
-        <i class='bx bxs-cog settings-toggle'></i> <div class="settings-content">
-            <h4>Personnalise ton espace</h4>
+    <!-- ======================= MODALS (FENÊTRES POP-UP) ======================= -->
+    <!-- Modal pour le profil -->
+    <div id="profile-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3>Modifier mon profil</h3>
+            <label for="modal-name">Nom :</label>
+            <input type="text" id="modal-name">
+            <label for="modal-bio">Bio :</label>
+            <textarea id="modal-bio"></textarea>
+            <label for="modal-avatar">Choisir une nouvelle photo :</label>
+            <input type="file" id="modal-avatar" accept="image/*">
+            <button id="save-profile-btn" class="cta-button">Enregistrer</button>
+        </div>
+    </div>
 
+    <!-- Modal pour les projets (Ajouter/Modifier) -->
+    <div id="project-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3 id="project-modal-title">Ajouter un projet</h3>
+            <input type="hidden" id="project-id">
+            <label for="project-title">Titre :</label>
+            <input type="text" id="project-title">
+            <label for="project-category">Catégorie :</label>
+            <select id="project-category">
+                <option value="voyage">Voyage</option>
+                <option value="lifestyle">Lifestyle</option>
+                <option value="vlog">Vlog</option>
+            </select>
+            <label for="project-type">Type :</label>
+            <select id="project-type">
+                <option value="image">Image</option>
+                <option value="video">Vidéo YouTube</option>
+            </select>
+            <div id="project-url-field">
+                <label for="project-url">URL de l'image :</label>
+                <input type="text" id="project-url" placeholder="https://... ou choisir un fichier">
+                <input type="file" id="project-file" accept="image/*">
+            </div>
+            <div id="project-youtubeId-field" style="display: none;">
+                <label for="project-youtubeId">ID de la vidéo YouTube :</label>
+                <input type="text" id="project-youtubeId" placeholder="Ex: jfKfPfyJRdk">
+            </div>
+            <button id="save-project-btn" class="cta-button">Enregistrer le projet</button>
+        </div>
+    </div>
+
+    <!-- Modal pour modifier un article de journal -->
+    <div id="blog-edit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3>Modifier l'article</h3>
+            <input type="hidden" id="blog-edit-id">
+            <label for="blog-edit-title">Titre :</label>
+            <input type="text" id="blog-edit-title">
+            <label for="blog-edit-content">Contenu :</label>
+            <textarea id="blog-edit-content" rows="5"></textarea>
+            <button id="save-blog-edit-btn" class="cta-button">Enregistrer les modifications</button>
+        </div>
+    </div>
+
+    <div class="settings-panel">
+        <i class='bx bxs-palette settings-toggle'></i>
+        <div class="settings-content">
+            <h4>Personnalise ton espace</h4>
             <div class="setting-item">
                 <label>Thème</label>
-                <button id="theme-switcher"><i class='bx bxs-sun'></i> Mode Clair / <i class='bx bxs-moon'></i> Mode Sombre</button>
+                <button id="theme-switcher"><i class='bx bxs-sun'></i> / <i class='bx bxs-moon'></i></button>
             </div>
-
             <div class="setting-item">
-                <label for="bg-color-picker">Couleur de fond</label>
-                <input type="color" id="bg-color-picker" value="#1a1a2e">
+                <label>Couleurs prédéfinies</label>
+                <div id="color-themes"></div>
             </div>
-
             <div class="setting-item">
                 <label for="font-selector">Police</label>
                 <select id="font-selector">
@@ -86,9 +155,14 @@
                     <option value="'Montserrat', sans-serif">Montserrat</option>
                 </select>
             </div>
+            <div class="setting-item">
+                <label>Mode Visiteur</label>
+                <button id="preview-mode-btn" class="cta-button"><i class='bx bx-show'></i> Aperçu</button>
+            </div>
         </div>
     </div>
 
+    <div id="notification-container"></div>
 
     <script src="script.js"></script>
 </body>
