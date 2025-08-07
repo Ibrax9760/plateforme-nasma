@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Espace Perso</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h3>Mon Univers</h3>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#accueil"><i class='bx bxs-home'></i> Accueil</a></li>
+            <li><a href="#galerie"><i class='bx bxs-camera'></i> Galerie</a></li>
+            <li><a href="#blog"><i class='bx bxs-pencil'></i> Journal</a></li>
+            <li><a href="#playlist"><i class='bx bxs-videos'></i> Playlist</a></li>
+        </ul>
+
+        <div class="social-links">
+    <a href="https-lien-vers-ton-instagram" target="_blank"><i class='bx bxl-instagram-alt'></i></a>
+    <a href="https-lien-vers-ton-tiktok" target="_blank"><i class='bx bxl-tiktok'></i></a>
+    <a href="https-lien-vers-ton-youtube" target="_blank"><i class='bx bxl-youtube'></i></a>
+    <a href="https-lien-vers-ton-snapchat" target="_blank"><i class='bx bxl-snapchat'></i></a>
+</div>
+    </nav>
+
+    <main class="main-content">
+        
+        <section id="accueil" class="page-section">
+            <div class="accueil-header">
+                <img src="assets/profile.jpg" alt="Photo de profil" class="profile-pic animate-on-scroll">
+                <h1 class="animate-on-scroll">Salut, Nasma !</h1>
+                <p class="animate-on-scroll">Bienvenue dans ton espace créatif.</p>
+            </div>
+            </section>
+
+        <section id="galerie" class="page-section">
+            <h2 class="animate-on-scroll">Galerie</h2>
+            <div class="filter-buttons animate-on-scroll">
+                <button class="filter-btn active" data-category="all">Tout</button>
+                <button class="filter-btn" data-category="voyage">Voyage</button>
+                <button class="filter-btn" data-category="lifestyle">Lifestyle</button>
+            </div>
+            <div class="gallery-grid">
+                </div>
+        </section>
+
+        <section id="blog" class="page-section">
+            <h2 class="animate-on-scroll">Mon Journal</h2>
+            <div class="blog-posts">
+                </div>
+        </section>
+
+        <section id="playlist" class="page-section">
+            <h2 class="animate-on-scroll">Playlist du moment</h2>
+            <div class="playlist-container">
+                 </div>
+        </section>
+        
+    </main>
+
+    <div class="settings-panel">
+        <i class='bx bxs-cog settings-toggle'></i> <div class="settings-content">
+            <h4>Personnalise ton espace</h4>
+
+            <div class="setting-item">
+                <label>Thème</label>
+                <button id="theme-switcher"><i class='bx bxs-sun'></i> Mode Clair / <i class='bx bxs-moon'></i> Mode Sombre</button>
+            </div>
+
+            <div class="setting-item">
+                <label for="bg-color-picker">Couleur de fond</label>
+                <input type="color" id="bg-color-picker" value="#1a1a2e">
+            </div>
+
+            <div class="setting-item">
+                <label for="font-selector">Police</label>
+                <select id="font-selector">
+                    <option value="'Poppins', sans-serif">Poppins</option>
+                    <option value="'Roboto', sans-serif">Roboto</option>
+                    <option value="'Montserrat', sans-serif">Montserrat</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="script.js"></script>
+</body>
+</html>
