@@ -7,9 +7,7 @@
     <link rel="stylesheet" href="./css/style.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     
-    <!-- Scripts Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <!-- On a supprimé les anciens scripts Firebase d'ici -->
 </head>
 <body>
     <!-- Tout le contenu de ton body reste le même... -->
@@ -101,6 +99,10 @@
                 <button id="theme-switcher"><i class='bx bxs-sun'></i> / <i class='bx bxs-moon'></i></button>
             </div>
             <div class="setting-item">
+                <label>Couleur d'accentuation</label>
+                <div id="color-themes"></div>
+            </div>
+            <div class="setting-item">
                 <label for="font-selector">Police</label>
                 <select id="font-selector">
                     <option value="'Poppins', sans-serif">Poppins</option>
@@ -117,10 +119,7 @@
     <div id="notification-container"></div>
 
     <!-- LA CORRECTION EST ICI 👇 -->
-    <!-- On charge tous les scripts un par un, dans le bon ordre. -->
-    <script src="./js/firebase.js"></script>
-    <script src="./js/ui.js"></script>
-    <script src="./js/events.js"></script>
-    <script src="./js/main.js"></script>
+    <!-- On appelle le script principal et on lui dit que c'est un "module" -->
+    <script type="module" src="./js/main.js"></script>
 </body>
 </html>

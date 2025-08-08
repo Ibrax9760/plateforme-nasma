@@ -1,23 +1,25 @@
+// Ce fichier gère tout ce qui est visuel : l'affichage des données et les interactions de l'interface.
+
 // On sélectionne tous les éléments HTML dont on aura besoin une seule fois.
-const elements = {
+export const elements = {
     profile: { name: document.getElementById('profile-name'), bio: document.getElementById('profile-bio'), avatar: document.getElementById('profile-avatar') },
     projectsGrid: document.querySelector('.gallery-grid'),
     blogPostsContainer: document.querySelector('.blog-posts'),
     profileModal: { element: document.getElementById('profile-modal'), name: document.getElementById('modal-name'), bio: document.getElementById('modal-bio'), avatarInput: document.getElementById('modal-avatar-input'), saveBtn: document.getElementById('save-profile-btn'), closeBtn: document.querySelector('#profile-modal .close-btn'), editProfileBtn: document.getElementById('edit-profile-btn') },
     projectModal: { element: document.getElementById('project-modal'), title: document.getElementById('project-modal-title'), id: document.getElementById('project-id'), titleInput: document.getElementById('project-title-input'), urlInput: document.getElementById('project-url-input'), saveBtn: document.getElementById('save-project-btn'), closeBtn: document.querySelector('#project-modal .close-btn'), addProjectBtn: document.getElementById('add-project-btn') },
     postModal: { element: document.getElementById('post-modal'), title: document.getElementById('post-modal-title'), id: document.getElementById('post-id'), titleInput: document.getElementById('post-title-input'), contentInput: document.getElementById('post-content-input'), saveBtn: document.getElementById('save-post-btn'), closeBtn: document.querySelector('#post-modal .close-btn'), addPostBtn: document.getElementById('add-post-btn') },
-    settings: { panel: document.querySelector('.settings-panel'), toggle: document.querySelector('.settings-toggle'), themeSwitcher: document.getElementById('theme-switcher'), fontSelector: document.getElementById('font-selector'), previewModeBtn: document.getElementById('preview-mode-btn'), exitPreviewBtn: document.getElementById('exit-preview-btn') },
+    settings: { panel: document.querySelector('.settings-panel'), toggle: document.querySelector('.settings-toggle'), themeSwitcher: document.getElementById('theme-switcher'), fontSelector: document.getElementById('font-selector'), colorThemesContainer: document.getElementById('color-themes'), previewModeBtn: document.getElementById('preview-mode-btn'), exitPreviewBtn: document.getElementById('exit-preview-btn') },
 };
 
 // Affiche les données du profil.
-function renderProfile(data) {
+export function renderProfile(data) {
     elements.profile.name.textContent = data.name;
     elements.profile.bio.textContent = data.bio;
     elements.profile.avatar.src = data.avatar;
 }
 
 // Affiche les projets dans la galerie.
-function renderProjects(items) {
+export function renderProjects(items) {
     const grid = elements.projectsGrid;
     grid.innerHTML = '';
     items.forEach(item => {
@@ -35,7 +37,7 @@ function renderProjects(items) {
 }
 
 // Affiche les articles du journal.
-function renderBlogPosts(items) {
+export function renderBlogPosts(items) {
     const container = elements.blogPostsContainer;
     container.innerHTML = '';
     items.forEach(item => {
@@ -54,18 +56,50 @@ function renderBlogPosts(items) {
 }
 
 // Applique le thème (clair/sombre) sauvegardé.
-function applyTheme() {
+export function applyTheme() {
     const savedTheme = localStorage.getItem('theme') || 'dark';
     document.body.classList.toggle('light-theme', savedTheme === 'light');
 }
 
 // Change la police d'écriture.
-function changeFont(font) {
+export function changeFont(font) {
     document.documentElement.style.setProperty('--font-family-base', font);
 }
 
+// Applique la couleur principale sauvegardée.
+export function applyPrimaryColor() {
+    const savedColor = localStorage.getItem('primaryColor') || '#6c63ff'; // Couleur par défaut
+    document.documentElement.style.setProperty('--color-primary', savedColor);
+    
+    document.querySelectorAll('.color-swatch').forEach(swatch => {
+        swatch.classList.toggle('active', swatch.dataset.color === savedColor);
+    });
+}
+
+// Crée les pastilles de couleur dans le panneau de paramètres.
+export function setupColorThemes() {
+    const themes = {
+        purple: '#6c63ff',
+        pink: '#ff7eb9',
+        blue: '#3498db',
+        green: '#2ecc71',
+        orange: '#e67e22',
+        red: '#e74c3c',
+        teal: '#1abc9c'
+    };
+    const container = elements.settings.colorThemesContainer;
+    container.innerHTML = '';
+    for (const colorName in themes) {
+        const swatch = document.createElement('div');
+        swatch.className = 'color-swatch';
+        swatch.style.backgroundColor = themes[colorName];
+        swatch.dataset.color = themes[colorName];
+        container.appendChild(swatch);
+    }
+}
+
 // Met en surbrillance le lien du menu correspondant à la section visible.
-function setupNavHighlightOnScroll() {
+export function setupNavHighlightOnScroll() {
     const sections = document.querySelectorAll('.page-section');
     const navLinks = document.querySelectorAll('.nav-link');
     const observer = new IntersectionObserver(entries => {

@@ -1,44 +1,50 @@
+// Ce fichier gère toutes les interactions de l'utilisateur : les clics, les formulaires, etc.
+
+import { db, doc, getDoc, updateDoc, addDoc, deleteDoc, collection, serverTimestamp } from './firebase.js';
+import { elements } from './ui.js';
+
 // --- LOGIQUE DES MODALS ---
-function openProfileModal() {
-    db.collection('data').doc('profile').get().then(doc => {
-        if (doc.exists) {
-            const data = doc.data();
-            elements.profileModal.name.value = data.name;
-            elements.profileModal.bio.value = data.bio;
-            elements.profileModal.avatarInput.value = '';
-            elements.profileModal.element.style.display = 'block';
-        }
-    });
+async function openProfileModal() {
+    const docRef = doc(db, 'data', 'profile');
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        const data = docSnap.data();
+        elements.profileModal.name.value = data.name;
+        elements.profileModal.bio.value = data.bio;
+        elements.profileModal.avatarInput.value = '';
+        elements.profileModal.element.style.display = 'block';
+    }
 }
 
 function saveProfile() {
     const modal = elements.profileModal;
     const dataToUpdate = { name: modal.name.value, bio: modal.bio.value };
     const file = modal.avatarInput.files[0];
+    const docRef = doc(db, 'data', 'profile');
     if (file) {
         const reader = new FileReader();
         reader.onload = async (e) => {
             dataToUpdate.avatar = e.target.result;
-            await db.collection('data').doc('profile').update(dataToUpdate);
+            await updateDoc(docRef, dataToUpdate);
             modal.element.style.display = 'none';
         };
         reader.readAsDataURL(file);
     } else {
-        db.collection('data').doc('profile').update(dataToUpdate);
+        updateDoc(docRef, dataToUpdate);
         modal.element.style.display = 'none';
     }
 }
 
-function openProjectModal(id = null) {
+async function openProjectModal(id = null) {
     const modal = elements.projectModal;
     if (id) {
-        db.collection('projects').doc(id).get().then(doc => {
-            const data = doc.data();
-            modal.title.textContent = "Modifier le projet";
-            modal.id.value = id;
-            modal.titleInput.value = data.title;
-            modal.urlInput.value = data.url;
-        });
+        const docRef = doc(db, 'projects', id);
+        const docSnap = await getDoc(docRef);
+        const data = docSnap.data();
+        modal.title.textContent = "Modifier le projet";
+        modal.id.value = id;
+        modal.titleInput.value = data.title;
+        modal.urlInput.value = data.url;
     } else {
         modal.title.textContent = "Ajouter un projet";
         modal.id.value = '';
@@ -53,24 +59,24 @@ async function saveProject() {
     const id = modal.id.value;
     const data = { title: modal.titleInput.value, url: modal.urlInput.value };
     if (id) {
-        await db.collection('projects').doc(id).update(data);
+        await updateDoc(doc(db, 'projects', id), data);
     } else {
-        data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-        await db.collection('projects').add(data);
+        data.createdAt = serverTimestamp();
+        await addDoc(collection(db, 'projects'), data);
     }
     modal.element.style.display = 'none';
 }
 
-function openPostModal(id = null) {
+async function openPostModal(id = null) {
     const modal = elements.postModal;
     if (id) {
-        db.collection('blogPosts').doc(id).get().then(doc => {
-            const data = doc.data();
-            modal.title.textContent = "Modifier l'article";
-            modal.id.value = id;
-            modal.titleInput.value = data.title;
-            modal.contentInput.value = data.content;
-        });
+        const docRef = doc(db, 'blogPosts', id);
+        const docSnap = await getDoc(docRef);
+        const data = docSnap.data();
+        modal.title.textContent = "Modifier l'article";
+        modal.id.value = id;
+        modal.titleInput.value = data.title;
+        modal.contentInput.value = data.content;
     } else {
         modal.title.textContent = "Ajouter un article";
         modal.id.value = '';
@@ -85,10 +91,10 @@ async function savePost() {
     const id = modal.id.value;
     const data = { title: modal.titleInput.value, content: modal.contentInput.value };
     if (id) {
-        await db.collection('blogPosts').doc(id).update(data);
+        await updateDoc(doc(db, 'blogPosts', id), data);
     } else {
-        data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-        await db.collection('blogPosts').add(data);
+        data.createdAt = serverTimestamp();
+        await addDoc(collection(db, 'blogPosts'), data);
     }
     modal.element.style.display = 'none';
 }
@@ -103,13 +109,14 @@ function handleCardActions(e) {
         isProject ? openProjectModal(id) : openPostModal(id);
     } else if (target.classList.contains('delete-btn')) {
         if (confirm('Êtes-vous sûr de vouloir supprimer cet élément ?')) {
-            db.collection(isProject ? 'projects' : 'blogPosts').doc(id).delete();
+            const collectionName = isProject ? 'projects' : 'blogPosts';
+            deleteDoc(doc(db, collectionName, id));
         }
     }
 }
 
 // Fonction principale qui branche tous les "interrupteurs".
-function setupEventListeners() {
+export function setupEventListeners() {
     elements.profileModal.editProfileBtn.addEventListener('click', openProfileModal);
     elements.projectModal.addProjectBtn.addEventListener('click', () => openProjectModal());
     elements.postModal.addPostBtn.addEventListener('click', () => openPostModal());
@@ -124,12 +131,22 @@ function setupEventListeners() {
     elements.settings.toggle.addEventListener('click', () => elements.settings.panel.classList.toggle('open'));
     elements.settings.previewModeBtn.addEventListener('click', () => document.body.classList.add('preview-mode'));
     elements.settings.exitPreviewBtn.addEventListener('click', () => document.body.classList.remove('preview-mode'));
+    
     elements.settings.themeSwitcher.addEventListener('click', () => {
         const currentIsLight = document.body.classList.contains('light-theme');
         localStorage.setItem('theme', currentIsLight ? 'dark' : 'light');
-        applyTheme();
+        document.dispatchEvent(new Event('themeChanged'));
     });
+
     elements.settings.fontSelector.addEventListener('change', (e) => {
-        changeFont(e.target.value);
+        document.dispatchEvent(new CustomEvent('fontChanged', { detail: e.target.value }));
+    });
+
+    elements.settings.colorThemesContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('color-swatch')) {
+            const color = e.target.dataset.color;
+            localStorage.setItem('primaryColor', color);
+            document.dispatchEvent(new Event('colorChanged'));
+        }
     });
 }

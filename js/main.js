@@ -1,21 +1,40 @@
+// C'est le chef d'orchestre. Il importe les modules et lance l'application.
+
+import { db, collection, doc, onSnapshot, orderBy, query, setDoc } from './firebase.js';
+import { 
+    renderProfile, 
+    renderProjects, 
+    renderBlogPosts, 
+    applyTheme, 
+    changeFont, 
+    setupColorThemes,
+    applyPrimaryColor,
+    setupNavHighlightOnScroll 
+} from './ui.js';
+import { setupEventListeners } from './events.js';
+
 // --- ÉCOUTEURS TEMPS RÉEL ---
 function setupRealtimeListeners() {
-    db.collection('data').doc('profile').onSnapshot(doc => {
-        if (doc.exists) {
+    onSnapshot(doc(db, 'data', 'profile'), (doc) => {
+        if (doc.exists()) {
             renderProfile(doc.data());
         } else {
-            db.collection('data').doc('profile').set({ 
+            setDoc(doc(db, 'data', 'profile'), { 
                 name: "Nasma", 
                 bio: "Bienvenue sur ma page !", 
                 avatar: "https://placehold.co/150x150/6c63ff/FFFFFF?text=Profil" 
             });
         }
     });
-    db.collection('projects').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+
+    const projectsQuery = query(collection(db, 'projects'), orderBy('createdAt', 'desc'));
+    onSnapshot(projectsQuery, (snapshot) => {
         const projects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         renderProjects(projects);
     });
-    db.collection('blogPosts').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+
+    const postsQuery = query(collection(db, 'blogPosts'), orderBy('createdAt', 'desc'));
+    onSnapshot(postsQuery, (snapshot) => {
         const blogPosts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         renderBlogPosts(blogPosts);
     });
@@ -24,9 +43,17 @@ function setupRealtimeListeners() {
 // --- DÉMARRAGE DE L'APPLICATION ---
 function initializeApp() {
     applyTheme();
+    setupColorThemes();
+    applyPrimaryColor();
     setupRealtimeListeners();
     setupEventListeners();
     setupNavHighlightOnScroll();
+
+    // On écoute les événements personnalisés
+    document.addEventListener('themeChanged', applyTheme);
+    document.addEventListener('fontChanged', (e) => changeFont(e.detail));
+    document.addEventListener('colorChanged', applyPrimaryColor);
+
     console.log("🚀 Application initialisée !");
 }
 
