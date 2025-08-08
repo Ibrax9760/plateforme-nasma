@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon Espace Perso</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./css/style.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <!-- Scripts Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 </head>
 <body>
-
+    <!-- Tout le contenu de ton body reste le même... -->
     <div id="preview-banner">
         <span>Mode Aperçu Visiteur</span>
         <button id="exit-preview-btn">Quitter l'aperçu</button>
@@ -19,119 +23,72 @@
             <h3>Mon Univers</h3>
         </div>
         <ul class="nav-links">
-            <li><a href="#accueil"><i class='bx bxs-user-circle'></i> Profil</a></li>
-            <li><a href="#projets"><i class='bx bxs-camera-movie'></i> Mes Projets</a></li>
-            <li><a href="#journal"><i class='bx bxs-pencil'></i> Journal</a></li>
-            <li><a href="#contact"><i class='bx bxs-paper-plane'></i> Contact</a></li>
+            <li><a href="#profil" class="nav-link active"><i class='bx bxs-user-circle'></i> Profil</a></li>
+            <li><a href="#projets" class="nav-link"><i class='bx bxs-camera-movie'></i> Mes Projets</a></li>
+            <li><a href="#journal" class="nav-link"><i class='bx bxs-pencil'></i> Journal</a></li>
         </ul>
         <div class="social-links"></div>
     </nav>
 
     <main class="main-content">
-        
-        <section id="accueil" class="page-section">
+        <section id="profil" class="page-section">
             <div class="profile-header">
-                <img src="" alt="Photo de profil" class="profile-pic animate-on-scroll" id="profile-avatar">
-                <h1 class="animate-on-scroll" id="profile-name"></h1>
-                <p class="animate-on-scroll" id="profile-bio"></p>
-                <button id="edit-profile-btn" class="cta-button animate-on-scroll">Modifier le profil</button>
+                <img src="https://placehold.co/150x150/1a1a2e/e0e0e0?text=..." alt="Photo de profil" class="profile-pic" id="profile-avatar">
+                <h1 id="profile-name">Chargement...</h1>
+                <p id="profile-bio"></p>
+                <button id="edit-profile-btn" class="cta-button">Modifier le profil</button>
             </div>
         </section>
 
         <section id="projets" class="page-section">
             <div class="section-header">
-                <h2 class="animate-on-scroll">Mes Projets</h2>
-                <button id="add-project-btn" class="cta-button animate-on-scroll"><i class='bx bx-plus'></i> Ajouter un projet</button>
-            </div>
-            <div class="filter-buttons animate-on-scroll">
-                <button class="filter-btn active" data-category="all">Tout</button>
-                <button class="filter-btn" data-category="voyage">Voyage</button>
-                <button class="filter-btn" data-category="lifestyle">Lifestyle</button>
-                <button class="filter-btn" data-category="vlog">Vlogs</button>
+                <h2>Mes Projets</h2>
+                <button id="add-project-btn" class="cta-button"><i class='bx bx-plus'></i> Ajouter</button>
             </div>
             <div class="gallery-grid"></div>
         </section>
 
         <section id="journal" class="page-section">
-            <h2 class="animate-on-scroll">Mon Journal</h2>
-            <div class="journal-form animate-on-scroll">
-                <h3>Une nouvelle pensée ?</h3>
-                <input type="text" id="new-post-title" placeholder="Titre de votre pensée">
-                <textarea id="new-post-content" placeholder="Écrivez ici..."></textarea>
-                <button id="add-post-btn" class="cta-button">Publier</button>
+            <div class="section-header">
+                <h2>Mon Journal</h2>
+                <button id="add-post-btn" class="cta-button"><i class='bx bx-plus'></i> Ajouter</button>
             </div>
             <div class="blog-posts"></div>
         </section>
-
-        <section id="contact" class="page-section">
-            <h2 class="animate-on-scroll">Envoyez-moi un message</h2>
-            <form id="contact-form" class="animate-on-scroll">
-                <textarea name="message" placeholder="Votre message ici..."></textarea>
-                <button type="submit" class="cta-button">Envoyer</button>
-            </form>
-        </section>
-        
     </main>
 
-    <!-- ======================= MODALS (FENÊTRES POP-UP) ======================= -->
-    <!-- Modal pour le profil -->
+    <!-- Modals -->
     <div id="profile-modal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
             <h3>Modifier mon profil</h3>
-            <label for="modal-name">Nom :</label>
+            <label>Nom :</label>
             <input type="text" id="modal-name">
-            <label for="modal-bio">Bio :</label>
+            <label>Bio :</label>
             <textarea id="modal-bio"></textarea>
-            <label for="modal-avatar">Choisir une nouvelle photo :</label>
-            <input type="file" id="modal-avatar" accept="image/*">
+            <label>Photo de profil :</label>
+            <input type="file" id="modal-avatar-input" accept="image/*">
             <button id="save-profile-btn" class="cta-button">Enregistrer</button>
         </div>
     </div>
-
-    <!-- Modal pour les projets (Ajouter/Modifier) -->
     <div id="project-modal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
             <h3 id="project-modal-title">Ajouter un projet</h3>
             <input type="hidden" id="project-id">
-            <label for="project-title">Titre :</label>
-            <input type="text" id="project-title">
-            <label for="project-category">Catégorie :</label>
-            <select id="project-category">
-                <option value="voyage">Voyage</option>
-                <option value="lifestyle">Lifestyle</option>
-                <option value="vlog">Vlog</option>
-            </select>
-            <label for="project-type">Type :</label>
-            <select id="project-type">
-                <option value="image">Image</option>
-                <option value="video">Vidéo YouTube</option>
-            </select>
-            <div id="project-url-field">
-                <label for="project-url">URL de l'image :</label>
-                <input type="text" id="project-url" placeholder="https://... ou choisir un fichier">
-                <input type="file" id="project-file" accept="image/*">
-            </div>
-            <div id="project-youtubeId-field" style="display: none;">
-                <label for="project-youtubeId">ID de la vidéo YouTube :</label>
-                <input type="text" id="project-youtubeId" placeholder="Ex: jfKfPfyJRdk">
-            </div>
-            <button id="save-project-btn" class="cta-button">Enregistrer le projet</button>
+            <input type="text" id="project-title-input" placeholder="Titre">
+            <input type="text" id="project-url-input" placeholder="URL de l'image">
+            <button id="save-project-btn" class="cta-button">Enregistrer</button>
         </div>
     </div>
-
-    <!-- Modal pour modifier un article de journal -->
-    <div id="blog-edit-modal" class="modal">
+    <div id="post-modal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
-            <h3>Modifier l'article</h3>
-            <input type="hidden" id="blog-edit-id">
-            <label for="blog-edit-title">Titre :</label>
-            <input type="text" id="blog-edit-title">
-            <label for="blog-edit-content">Contenu :</label>
-            <textarea id="blog-edit-content" rows="5"></textarea>
-            <button id="save-blog-edit-btn" class="cta-button">Enregistrer les modifications</button>
+            <h3 id="post-modal-title">Ajouter un article</h3>
+            <input type="hidden" id="post-id">
+            <input type="text" id="post-title-input" placeholder="Titre">
+            <textarea id="post-content-input" placeholder="Contenu"></textarea>
+            <button id="save-post-btn" class="cta-button">Enregistrer</button>
         </div>
     </div>
 
@@ -144,10 +101,6 @@
                 <button id="theme-switcher"><i class='bx bxs-sun'></i> / <i class='bx bxs-moon'></i></button>
             </div>
             <div class="setting-item">
-                <label>Couleurs prédéfinies</label>
-                <div id="color-themes"></div>
-            </div>
-            <div class="setting-item">
                 <label for="font-selector">Police</label>
                 <select id="font-selector">
                     <option value="'Poppins', sans-serif">Poppins</option>
@@ -157,13 +110,17 @@
             </div>
             <div class="setting-item">
                 <label>Mode Visiteur</label>
-                <button id="preview-mode-btn" class="cta-button"><i class='bx bx-show'></i> Aperçu</button>
+                <button id="preview-mode-btn" class="cta-button">Aperçu</button>
             </div>
         </div>
     </div>
-
     <div id="notification-container"></div>
 
-    <script src="script.js"></script>
+    <!-- LA CORRECTION EST ICI 👇 -->
+    <!-- On charge tous les scripts un par un, dans le bon ordre. -->
+    <script src="./js/firebase.js"></script>
+    <script src="./js/ui.js"></script>
+    <script src="./js/events.js"></script>
+    <script src="./js/main.js"></script>
 </body>
 </html>
