@@ -30,12 +30,25 @@
 
     <main class="main-content">
         <section id="profil" class="page-section">
-            <div class="profile-header">
-                <img src="https://placehold.co/150x150/1a1a2e/e0e0e0?text=..." alt="Photo de profil" class="profile-pic" id="profile-avatar">
-                <h1 id="profile-name">Chargement...</h1>
-                <p id="profile-bio"></p>
-                <button id="edit-profile-btn" class="cta-button">Modifier le profil</button>
-            </div>
+    <div class="profile-header">
+        <img src="https://placehold.co/150x150/1a1a2e/e0e0e0?text=..." alt="Photo de profil" class="profile-pic" id="profile-avatar">
+        <h1 id="profile-name">Chargement...</h1>
+        <p id="profile-bio"></p>
+
+        <div id="profile-stats">
+    <div class="stat-card">
+        <i class='bx bxs-camera-movie'></i>
+        <span id="project-count" class="stat-number">0</span>
+        <span class="stat-label">Projets</span>
+    </div>
+    <div class="stat-card">
+        <i class='bx bxs-pencil'></i>
+        <span id="post-count" class="stat-number">0</span>
+        <span class="stat-label">Articles</span>
+    </div>
+</div>
+        <button id="edit-profile-btn" class="cta-button">Modifier le profil</button>
+    </div>
         </section>
 
         <section id="projets" class="page-section">
@@ -44,6 +57,11 @@
                 <button id="add-project-btn" class="cta-button"><i class='bx bx-plus'></i> Ajouter</button>
             </div>
             <div class="gallery-grid"></div>
+
+            <div class="see-more-container">
+                <button id="see-more-projects-btn" class="cta-button">Voir plus</button>
+            </div>
+            </section>
         </section>
 
         <section id="journal" class="page-section">
@@ -70,15 +88,17 @@
         </div>
     </div>
     <div id="project-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h3 id="project-modal-title">Ajouter un projet</h3>
-            <input type="hidden" id="project-id">
-            <input type="text" id="project-title-input" placeholder="Titre">
-            <input type="text" id="project-url-input" placeholder="URL de l'image">
-            <button id="save-project-btn" class="cta-button">Enregistrer</button>
-        </div>
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3 id="project-modal-title">Ajouter un projet</h3>
+        <input type="hidden" id="project-id">
+        <input type="text" id="project-title-input" placeholder="Titre">
+
+        <label>Fichier (image ou vidéo) :</label>
+        <input type="file" id="project-file-input" accept="image/*,video/*">
+        <button id="save-project-btn" class="cta-button">Enregistrer</button>
     </div>
+</div>
     <div id="post-modal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
@@ -121,5 +141,13 @@
     <!-- LA CORRECTION EST ICI 👇 -->
     <!-- On appelle le script principal et on lui dit que c'est un "module" -->
     <script type="module" src="./js/main.js"></script>
+
+     <div id="lightbox" class="hidden">
+        <button class="lightbox-close">&times;</button>
+        <button class="lightbox-prev">&#10094;</button>
+        <button class="lightbox-next">&#10095;</button>
+        <div class="lightbox-content">
+            </div>
+    </div>
 </body>
 </html>
