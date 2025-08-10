@@ -11,45 +11,87 @@ async function openProfileModal() {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
         const data = docSnap.data();
-        elements.profileModal.name.value = data.name;
-        elements.profileModal.bio.value = data.bio;
-        elements.profileModal.avatarInput.value = '';
-        elements.profileModal.element.style.display = 'block';
+        const modal = elements.profileModal;
+
+        // Champs de base
+        modal.name.value = data.name || '';
+        modal.bio.value = data.bio || '';
+        
+        // Champs de personnalisation
+        modal.slogan.value = data.slogan || '';
+        modal.profileBgText.value = data.profileBackground || '';
+        modal.bgBlur.checked = !!data.isBgBlurred;
+        modal.bgGradient.checked = !!data.isBgGradient;
+        modal.layoutStyle.value = data.layoutStyle || 'default';
+
+        // On vide toujours les champs de fichiers
+        modal.avatarInput.value = ''; 
+        modal.profileBgFile.value = '';
+
+        modal.element.style.display = 'block';
     }
 }
 
-function saveProfile() {
+async function saveProfile() {
     const modal = elements.profileModal;
-    
-    // On collecte TOUTES les données du modal
+    const saveButton = modal.saveBtn;
+
+    saveButton.disabled = true;
+    saveButton.textContent = 'Sauvegarde...';
+
+    // On prépare les données textuelles
     const dataToUpdate = {
         name: modal.name.value,
         bio: modal.bio.value,
         slogan: modal.slogan.value,
-        profileBackground: modal.profileBg.value,
         isBgBlurred: modal.bgBlur.checked,
         isBgGradient: modal.bgGradient.checked,
         layoutStyle: modal.layoutStyle.value
     };
 
-    const file = modal.avatarInput.files[0];
+    const avatarFile = modal.avatarInput.files[0];
+    const backgroundFile = modal.profileBgFile.files[0];
     const docRef = doc(db, 'data', 'profile');
 
-    // La logique de l'image de profil ne change pas
-    if (file) {
-        const storageRef = ref(storage, `profile-avatars/${docRef.id}`);
-        uploadBytes(storageRef, file).then(snapshot => {
-            getDownloadURL(snapshot.ref).then(downloadURL => {
-                dataToUpdate.avatar = downloadURL;
-                updateDoc(docRef, dataToUpdate);
-            });
-        });
-    } else {
-        // Si pas de nouvelle image, on met juste à jour le reste
-        updateDoc(docRef, dataToUpdate);
+    try {
+        // Promesse pour l'upload de l'avatar (si présent)
+        const avatarUploadPromise = avatarFile 
+            ? uploadBytes(ref(storage, `profile-assets/${docRef.id}_avatar`), avatarFile)
+                .then(snap => getDownloadURL(snap.ref))
+            : Promise.resolve(null);
+
+        // Promesse pour l'upload du fond (si présent)
+        const backgroundUploadPromise = backgroundFile
+            ? uploadBytes(ref(storage, `profile-assets/${docRef.id}_background`), backgroundFile)
+                .then(snap => getDownloadURL(snap.ref))
+            : Promise.resolve(null);
+
+        // On attend que les deux uploads soient terminés
+        const [avatarUrl, backgroundUrl] = await Promise.all([avatarUploadPromise, backgroundUploadPromise]);
+
+        // On met à jour l'objet avec les URLs obtenues
+        if (avatarUrl) {
+            dataToUpdate.avatar = avatarUrl;
+        }
+        if (backgroundUrl) {
+            dataToUpdate.profileBackground = backgroundUrl;
+        } else {
+            // Si aucun fichier de fond n'a été uploadé, on utilise le champ texte
+            dataToUpdate.profileBackground = modal.profileBgText.value;
+        }
+
+        // On sauvegarde tout dans Firestore
+        await updateDoc(docRef, dataToUpdate);
+
+    } catch (error) {
+        console.error("Erreur lors de la sauvegarde du profil : ", error);
+        alert("Une erreur est survenue pendant la sauvegarde.");
+    } finally {
+        // On réactive le bouton et on ferme le modal
+        saveButton.disabled = false;
+        saveButton.textContent = 'Enregistrer';
+        modal.element.style.display = 'none';
     }
-    
-    modal.element.style.display = 'none';
 }
 
 async function openProjectModal(id = null) {
