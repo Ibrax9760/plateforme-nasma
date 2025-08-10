@@ -100,12 +100,16 @@ input, textarea, select {
 .profile-pic { width: 150px; height: 150px; border-radius: 50%; border: 5px solid var(--color-primary); object-fit: cover; margin-bottom: 20px; }
 #profile-name { font-size: 2.5em; margin: 10px 0; }
 #profile-bio { max-width: 600px; color: var(--color-text-muted); font-size: 1.1em; line-height: 1.6; }
+/* Rend le conteneur des statistiques flexible et centré */
 #profile-stats {
-    display: flex;
-    gap: 20px; /* Espace entre les cartes */
-    margin-top: 30px;
-    margin-bottom: 30px;
-    justify-content: center;
+    display: grid;
+    /* La magie est ici : crée des colonnes flexibles d'au moins 130px */
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 15px; /* Espace entre les cartes */
+    width: 100%;
+    max-width: 400px; /* Limite la largeur maximale pour un meilleur look */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #profile-slogan {
@@ -155,12 +159,12 @@ input, textarea, select {
 .stat-card {
     background-color: var(--color-surface);
     border-radius: var(--border-radius);
-    padding: 20px 30px;
+    padding: 20px 15px; /* Moins de padding horizontal */
     display: flex;
     flex-direction: column; /* Aligner les éléments verticalement */
     align-items: center;
     gap: 8px; /* Espace entre les éléments dans une carte */
-    min-width: 120px;
+    min-width: 0; /* On annule la largeur minimale fixe */
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -309,15 +313,91 @@ body.preview-mode #add-project-btn {
 
 /* --- RESPONSIVE POUR LES MOBILES --- */
 @media (max-width: 768px) {
-    body { padding-left: 0; padding-bottom: 80px; }
-    .sidebar { width: 100%; height: 60px; bottom: 0; top: auto; flex-direction: row; justify-content: space-around; align-items: center; border-top: 1px solid rgba(255, 255, 255, 0.1); z-index: 1000; }
-    .sidebar-header, .social-links { display: none; }
-    .nav-links { display: flex; width: 100%; justify-content: space-around; }
-    .nav-links a { padding: 10px; margin-bottom: 0; flex-direction: column; gap: 4px; }
-    .nav-links a i { margin-right: 0; font-size: 1.5em; }
-    .main-content { padding: 20px; }
-    h1 { font-size: 1.8em; }
-    .modal-content { width: 90%; margin: 20% auto; }
+    /* --- NOUVELLE BARRE LATERALE MOBILE COMPACTE --- */
+body {
+    /* On adapte le padding au nouveau menu */
+    padding-left: 80px; 
+    padding-bottom: 0; /* Plus besoin de padding en bas */
+}
+
+.sidebar {
+    width: 80px; /* Largeur du menu compact */
+    height: 100vh;
+    top: 0; /* On le remet en haut */
+    bottom: auto;
+    padding: 20px 0; /* Padding vertical, pas horizontal */
+    flex-direction: column; /* On ré-empile les éléments */
+    justify-content: space-between; /* Espace entre le titre et les icônes sociales */
+    align-items: center;
+}
+
+/* On ré-affiche le titre et les liens sociaux */
+.sidebar-header, .social-links {
+    display: block;
+}
+
+.sidebar-header h3 {
+    writing-mode: vertical-rl; /* Affiche "Mon Univers" à la verticale */
+    text-orientation: mixed;
+    margin: 20px 0;
+    font-size: 1em;
+}
+
+.social-links {
+    display: flex;
+    flex-direction: column; /* Icônes empilées */
+    gap: 20px;
+}
+
+.social-links a {
+    margin: 0;
+    font-size: 1.4em;
+}
+
+.nav-links {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 15px;
+}
+
+.nav-links a {
+    flex-direction: column;
+    border-left: 4px solid transparent; /* L'indicateur est prêt, mais invisible */
+    padding: 15px 0;
+    font-size: 0; /* Masque le texte du lien */
+    /* Assure que les icônes inactives ont une couleur neutre */
+    color: var(--color-text-muted);
+    transition: color 0.3s, border-left-color 0.3s;
+}
+
+.nav-links a i {
+    font-size: 1.8em; /* On ne garde que l'icône, bien visible */
+    margin-right: 0;
+}
+
+.nav-links a.active {
+    /* 1. On active la couleur de la bordure */
+    border-left-color: var(--color-primary);
+    /* 2. L'icône prend la couleur principale pour être bien visible */
+    color: var(--color-primary);
+    /* 3. On supprime le fond qui causait le bug visuel */
+    background-color: transparent;
+}
+
+/* --- AFFICHAGE COMPACT DU JOURNAL --- */
+.blog-post {
+    padding: 15px; /* Padding interne réduit */
+}
+
+.blog-post h3 {
+    font-size: 1.2em; /* Titre plus petit */
+}
+
+.blog-post p {
+    font-size: 0.9em; /* Texte du contenu plus petit */
+    line-height: 1.5; /* Hauteur de ligne pour la lisibilité */
+}
 
 @media (max-width: 992px) {
     .gallery-grid {
@@ -326,12 +406,21 @@ body.preview-mode #add-project-btn {
     }
 }
 
+/* Ajustements pour les tablettes */
+.main-content {
+    padding: 30px; /* Un peu moins de padding que sur PC */
+}
+
+.profile-header.layout-grid {
+    gap: 15px 20px; /* On réduit un peu l'espacement de la grille */
+}
+
 @media (max-width: 768px) {
-    /* ... vos règles existantes ... */
     .gallery-grid {
-        /* Passe à 1 colonne sur les mobiles */
-        grid-template-columns: 1fr;
-    }
+    /* Grille de 3 colonnes pour un bon compromis visuel */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px; /* Espacement réduit entre les projets */
+}
 }
     .see-more-container {
     text-align: center;
