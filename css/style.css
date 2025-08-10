@@ -108,6 +108,50 @@ input, textarea, select {
     justify-content: center;
 }
 
+#profile-slogan {
+    font-size: 1.2em;
+    font-weight: 400;
+    color: var(--color-text-muted);
+    margin-top: 15px;
+    font-style: italic;
+}
+
+/* Préparation du conteneur de profil pour le fond personnalisé */
+.profile-header {
+    position: relative;
+    overflow: hidden; /* Empêche le fond de déborder */
+    border-radius: var(--border-radius);
+    padding: 50px 20px; /* Ajustez si nécessaire */
+    z-index: 1;
+}
+
+/* Pseudo-élément pour le fond, afin de ne pas flouter le contenu */
+.profile-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-size: cover;
+    background-position: center;
+    transition: filter 0.4s, opacity 0.4s;
+    z-index: -1; /* Placé derrière le contenu */
+    background-image: var(--bg-pseudo-image);
+}
+
+/* Style pour l'effet de flou */
+.profile-header.has-blur::before {
+    filter: blur(8px);
+    transform: scale(1.1); /* Agrandi pour éviter les bords flous */
+}
+
+/* Style pour le dégradé (superposé sur l'image/couleur) */
+.profile-header.has-gradient::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%);
+    z-index: -1;
+}
+
 .stat-card {
     background-color: var(--color-surface);
     border-radius: var(--border-radius);
@@ -216,7 +260,21 @@ input, textarea, select {
 .modal { display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
 .modal-content { background-color: var(--color-surface); margin: 10% auto; padding: 30px; border-radius: var(--border-radius); width: 80%; max-width: 500px; position: relative; }
 .close-btn { color: var(--color-text-muted); float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
-
+.modal-options {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+    align-items: center;
+}
+.modal-options label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.modal-options input[type="checkbox"] {
+    width: auto; /* Annule la largeur de 100% */
+    margin-bottom: 0;
+}
 /* --- NOTIFICATIONS --- */
 #notification-container { position: fixed; bottom: 20px; right: 20px; z-index: 2000; }
 .notification { padding: 15px 20px; border-radius: var(--border-radius); color: white; margin-bottom: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); opacity: 0; transform: translateX(100%); animation: slideIn 0.5s forwards; }
@@ -335,3 +393,38 @@ body.preview-mode #add-project-btn {
 .lightbox-close { top: 20px; right: 30px; }
 .lightbox-prev { top: 50%; left: 20px; transform: translateY(-50%); }
 .lightbox-next { top: 50%; right: 20px; transform: translateY(-50%); }
+
+.profile-header.layout-grid {
+    display: grid;
+    grid-template-columns: 150px 1fr; /* Colonne pour l'avatar, colonne pour le texte */
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+        "avatar name"
+        "avatar bio"
+        "avatar slogan";
+    gap: 10px 30px; /* Espace entre les lignes et les colonnes */
+    text-align: left; /* Aligner le texte à gauche */
+    align-items: start;
+}
+
+.layout-grid .profile-pic { grid-area: avatar; margin-bottom: 0; }
+.layout-grid #profile-name { grid-area: name; margin: 0; }
+.layout-grid #profile-bio { grid-area: bio; margin: 0; max-width: 100%; }
+.layout-grid #profile-slogan { grid-area: slogan; margin: 0; }
+.layout-grid #profile-stats { grid-area: stats; justify-content: start; }
+.layout-grid #edit-profile-btn { grid-area: button; }
+
+/* Pour que les stats et le bouton se placent bien, on modifie la grille */
+.profile-header.layout-grid {
+    grid-template-areas:
+        "avatar name"
+        "avatar bio"
+        "avatar slogan"
+        "stats stats"
+        "button button";
+    align-items: center;
+}
+.layout-grid #profile-stats, .layout-grid #edit-profile-btn {
+    justify-self: center; /* Centrer ces éléments dans la grille */
+    margin-top: 20px;
+}

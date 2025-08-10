@@ -3,14 +3,16 @@
 // On sélectionne tous les éléments HTML dont on aura besoin une seule fois.
   export const elements = {
     profile: {
+        header: document.querySelector('.profile-header'),
         name: document.getElementById('profile-name'),
         bio: document.getElementById('profile-bio'),
-        avatar: document.getElementById('profile-avatar')
+        avatar: document.getElementById('profile-avatar'),
+        slogan: document.getElementById('profile-slogan')
     },
     socialLinksContainer: document.querySelector('.social-links'), // <-- C'EST CETTE LIGNE QUI MANQUAIT
     projectsGrid: document.querySelector('.gallery-grid'),
     blogPostsContainer: document.querySelector('.blog-posts'),
-    profileModal: { element: document.getElementById('profile-modal'), name: document.getElementById('modal-name'), bio: document.getElementById('modal-bio'), avatarInput: document.getElementById('modal-avatar-input'), saveBtn: document.getElementById('save-profile-btn'), closeBtn: document.querySelector('#profile-modal .close-btn'), editProfileBtn: document.getElementById('edit-profile-btn') },
+    profileModal: { element: document.getElementById('profile-modal'), name: document.getElementById('modal-name'), bio: document.getElementById('modal-bio'), avatarInput: document.getElementById('modal-avatar-input'), slogan: document.getElementById('modal-slogan'), profileBg: document.getElementById('modal-profile-bg'), bgBlur: document.getElementById('modal-bg-blur'), bgGradient: document.getElementById('modal-bg-gradient'), layoutStyle: document.getElementById('modal-layout-style'), saveBtn: document.getElementById('save-profile-btn'), closeBtn: document.querySelector('#profile-modal .close-btn'), editProfileBtn: document.getElementById('edit-profile-btn') },
     projectModal: { element: document.getElementById('project-modal'), title: document.getElementById('project-modal-title'), id: document.getElementById('project-id'), titleInput: document.getElementById('project-title-input'), fileInput: document.getElementById('project-file-input'), saveBtn: document.getElementById('save-project-btn'), closeBtn: document.querySelector('#project-modal .close-btn'), addProjectBtn: document.getElementById('add-project-btn') },
     postModal: { element: document.getElementById('post-modal'), title: document.getElementById('post-modal-title'), id: document.getElementById('post-id'), titleInput: document.getElementById('post-title-input'), contentInput: document.getElementById('post-content-input'), saveBtn: document.getElementById('save-post-btn'), closeBtn: document.querySelector('#post-modal .close-btn'), addPostBtn: document.getElementById('add-post-btn') },
     settings: { panel: document.querySelector('.settings-panel'), toggle: document.querySelector('.settings-toggle'), themeSwitcher: document.getElementById('theme-switcher'), fontSelector: document.getElementById('font-selector'), colorThemesContainer: document.getElementById('color-themes'), previewModeBtn: document.getElementById('preview-mode-btn'), exitPreviewBtn: document.getElementById('exit-preview-btn') },
@@ -18,9 +20,42 @@
 
 // Affiche les données du profil.
   export function renderProfile(data) {
+    // Rendu des textes et de l'avatar (comme avant)
     elements.profile.name.textContent = data.name;
     elements.profile.bio.textContent = data.bio;
     elements.profile.avatar.src = data.avatar;
+
+    // --- NOUVEAU ---
+    // Rendu du slogan (s'il existe)
+    if (elements.profile.slogan) {
+        elements.profile.slogan.textContent = data.slogan || '';
+    }
+
+    const header = elements.profile.header;
+    if (!header) return;
+
+    // Rendu du fond
+    const bg = data.profileBackground || 'transparent';
+    if (bg.startsWith('http')) {
+        header.style.setProperty('--bg-image', `url(${bg})`);
+        header.style.backgroundColor = 'transparent';
+    } else {
+        header.style.setProperty('--bg-image', 'none');
+        header.style.backgroundColor = bg;
+    }
+    // Application directe du style sur le pseudo-élément
+    header.style.setProperty('--bg-pseudo-image', header.style.getPropertyValue('--bg-image'));
+
+
+    // Rendu des effets visuels (flou, dégradé)
+    header.classList.toggle('has-blur', !!data.isBgBlurred);
+    header.classList.toggle('has-gradient', !!data.isBgGradient);
+
+    // Rendu de la disposition
+    header.classList.remove('layout-grid'); // On nettoie d'abord
+    if (data.layoutStyle === 'grid') {
+        header.classList.add('layout-grid');
+    }
 }
 
 // Affiche les projets dans la galerie.

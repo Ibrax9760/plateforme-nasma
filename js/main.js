@@ -25,11 +25,16 @@ function setupRealtimeListeners() {
             renderProfile(profileData);
             renderSocialLinks(profileData.social);
         } else {
-            setDoc(doc(db, 'data', 'profile'), { 
-                name: "Nasma", 
-                bio: "Bienvenue sur ma page !", 
-                avatar: "https://placehold.co/150x150/6c63ff/FFFFFF?text=Profil" 
-            });
+            setDoc(doc(db, 'data', 'profile'), {
+    name: "Nasma",
+    bio: "Bienvenue sur ma page !",
+    avatar: "https://placehold.co/150x150/6c63ff/FFFFFF?text=Profil",
+    slogan: "Ajoutez votre slogan ici !", // <-- AJOUTER
+    profileBackground: "#1a1a2e",      // <-- AJOUTER
+    isBgBlurred: false,                // <-- AJOUTER
+    isBgGradient: false,               // <-- AJOUTER
+    layoutStyle: "default"             // <-- AJOUTER
+});
         }
     });
 

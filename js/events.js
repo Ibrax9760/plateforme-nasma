@@ -20,21 +20,36 @@ async function openProfileModal() {
 
 function saveProfile() {
     const modal = elements.profileModal;
-    const dataToUpdate = { name: modal.name.value, bio: modal.bio.value };
+    
+    // On collecte TOUTES les données du modal
+    const dataToUpdate = {
+        name: modal.name.value,
+        bio: modal.bio.value,
+        slogan: modal.slogan.value,
+        profileBackground: modal.profileBg.value,
+        isBgBlurred: modal.bgBlur.checked,
+        isBgGradient: modal.bgGradient.checked,
+        layoutStyle: modal.layoutStyle.value
+    };
+
     const file = modal.avatarInput.files[0];
     const docRef = doc(db, 'data', 'profile');
+
+    // La logique de l'image de profil ne change pas
     if (file) {
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-            dataToUpdate.avatar = e.target.result;
-            await updateDoc(docRef, dataToUpdate);
-            modal.element.style.display = 'none';
-        };
-        reader.readAsDataURL(file);
+        const storageRef = ref(storage, `profile-avatars/${docRef.id}`);
+        uploadBytes(storageRef, file).then(snapshot => {
+            getDownloadURL(snapshot.ref).then(downloadURL => {
+                dataToUpdate.avatar = downloadURL;
+                updateDoc(docRef, dataToUpdate);
+            });
+        });
     } else {
+        // Si pas de nouvelle image, on met juste à jour le reste
         updateDoc(docRef, dataToUpdate);
-        modal.element.style.display = 'none';
     }
+    
+    modal.element.style.display = 'none';
 }
 
 async function openProjectModal(id = null) {

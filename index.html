@@ -34,6 +34,7 @@
         <img src="https://placehold.co/150x150/1a1a2e/e0e0e0?text=..." alt="Photo de profil" class="profile-pic" id="profile-avatar">
         <h1 id="profile-name">Chargement...</h1>
         <p id="profile-bio"></p>
+        <h4 id="profile-slogan"></h4>
 
         <div id="profile-stats">
     <div class="stat-card">
@@ -84,6 +85,22 @@
             <textarea id="modal-bio"></textarea>
             <label>Photo de profil :</label>
             <input type="file" id="modal-avatar-input" accept="image/*">
+            <label>Slogan / Emoji :</label>
+            <input type="text" id="modal-slogan" placeholder="✨ Créez la différence ✨">
+
+            <label>Fond du profil (URL ou couleur) :</label>
+            <input type="text" id="modal-profile-bg" placeholder="https://... ou #1a1a2e">
+
+        <div class="modal-options">
+            <label><input type="checkbox" id="modal-bg-blur"> Flouter le fond</label>
+            <label><input type="checkbox" id="modal-bg-gradient"> Appliquer un dégradé</label>
+        </div>
+
+            <label for="modal-layout-style">Style de disposition :</label>
+            <select id="modal-layout-style">
+            <option value="default">Défaut</option>
+            <option value="grid">Grille</option>
+            </select>
             <button id="save-profile-btn" class="cta-button">Enregistrer</button>
         </div>
     </div>
